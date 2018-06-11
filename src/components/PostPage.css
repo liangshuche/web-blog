@@ -9,3 +9,9 @@
 .container-scroll {
     overflow-x: auto;
 }
+
+.custom-input {
+    border: 10px;
+    border-color: black;
+    background: gray;
+}

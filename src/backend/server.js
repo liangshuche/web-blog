@@ -79,7 +79,7 @@ io.on('connection', (socket) => {
 			post_list.push({
 		   		user: post.user,
 		   		title: post.title,
-		   		content: post.content,
+				content: post.content,
 			})
 	  	});
 

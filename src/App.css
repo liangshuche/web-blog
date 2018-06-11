@@ -107,3 +107,16 @@
 .btn:active::focus {
   outline: 0px;
 }
+
+
+.card {
+  min-height: 300px;
+  min-width: 300px;
+  margin-right: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.container-scroll {
+  overflow-x: auto;
+}
