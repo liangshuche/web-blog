@@ -8,7 +8,8 @@ mongoose.connect('mongodb://localhost:27017/blog');
 const postsSchema = mongoose.Schema({
 	user: String,
   	title: String,
-  	content: String,
+	  content: String,
+	  time: String,
 });
 
 const Posts = mongoose.model('Posts', postsSchema);
@@ -61,7 +62,8 @@ io.on('connection', (socket) => {
 		const newPosts = new Posts({
 	  		user: data.user,
 	  		title: data.title,
-	  		content: data.content,
+			content: data.content,
+			time: data.time,  
 		});
 
 	newPosts.save();
@@ -73,18 +75,43 @@ io.on('connection', (socket) => {
 	
 		query.exec(function(err,posts){
 
-	  	if(err) return console.log(err);
+	  		if(err) return console.log(err);
 		  
-		  posts.forEach(function(post){
-			post_list.push({
-		   		user: post.user,
-		   		title: post.title,
-				content: post.content,
-			})
-	  	});
+			posts.forEach(function(post){
+				post_list.push({
+					_id: post._id,
+					user: post.user,
+					title: post.title,
+					content: post.content,
+					time: post.time,
+				})
+			});
 
 	  	io.emit('RECEIVE_POST', (post_list));
 		});
-  	});
+	});
+
+	socket.on('GET_POST_BY_ID', (id) => {
+		var query = Posts.find({_id: id});
+		var thePost = null;
+	
+		query.exec(function(err,posts){
+
+			if(err) return console.log(err);
+		  
+			posts.forEach(function(post){
+				thePost = {
+					_id: post._id,
+		   			user: post.user,
+		   			title: post.title,
+					content: post.content,
+					time: post.time,
+				};
+			});
+			io.emit('RECEIVE_POST_BY_ID', (thePost));
+		});
+	});
+	  
+	  
 });
 

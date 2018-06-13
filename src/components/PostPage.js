@@ -1,6 +1,13 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 var fs = require('fs');
+
+var options = {
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+};
 //import './PostPage.css';
 class PostPage extends Component {
     constructor(props) {
@@ -9,6 +16,7 @@ class PostPage extends Component {
             title: '',
             content: '',
             file: null,
+            redirect: false,
         }
 
         this.socket = this.props.socket;
@@ -35,38 +43,47 @@ class PostPage extends Component {
 
     handleOnClick() {
 
-        
-
-            this.socket.emit('NEW_POST', {
-                user: this.props.username,
-                title: this.state.title,
-                content: this.state.content,
-                img: this.state.file,
-            });
+        let time = new Date();
+        this.socket.emit('NEW_POST', {
+            user: this.props.username,
+            title: this.state.title,
+            content: this.state.content,
+            img: this.state.file,
+            time: time.toLocaleString('en', options),
+        });
         
         
         
         this.setState({
             title: '',
             content: '',
-            file: '',
+            file: null,
+            redirect: true,
         });
         
     }
     render() {
-        if( 1 ) {
-        //if( this.props.login) {
+        let file_text =  'Choose file'
+        if (this.state.file !== null){
+            file_text = this.state.file.name;
+        }
+        if (this.state.redirect) {
+            return (
+                <Redirect push to='/'/>
+            );
+        }
+        if( this.props.login) {
             return (
                 <div>
-                    <div class="jumbotron jumbotron-fluid">
-                        <div class="container post-header">
-                            <p class="lead">Write a new post</p>                    
-                        </div>
-                    </div>
+                    
                 
                     <div className='row'>
                         <div className='col-2'></div>
                         <div className='col-8'>
+                            <br/>
+                            <div class="alert alert-secondary text-center">
+                                Write a new Post!
+                            </div>
                             <div class="form-group">
                                 <label >Title:</label>
                                 <input type="text" class="form-control" id="title" value={this.state.title} onChange={this.handleTitleChange}></input>
@@ -83,7 +100,7 @@ class PostPage extends Component {
                             <div class="input-group mb-3">
                                 <div class="custom-file">
                                     <input type="file" class="custom-file-input" onChange={this.handleFileChange}/>
-                                    <label class="custom-file-label">Choose file</label>
+                                    <label class="custom-file-label">{file_text}</label>
                                 </div>
                             </div>
                             <br/>

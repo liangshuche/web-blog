@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 
-const brandStyle = {color: 'white'};
+const brandStyle = {color: 'white', cursor: 'default'};
 
 class NavBar extends Component {
     constructor(props) {
@@ -27,7 +27,7 @@ class NavBar extends Component {
 
         return (
             <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-                <a style={brandStyle} class="navbar-brand">Blog</a>
+                <a style={brandStyle} class="navbar-brand">Everyone's Blog</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
             </button>

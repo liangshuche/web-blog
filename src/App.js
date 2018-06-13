@@ -4,6 +4,7 @@ import io from 'socket.io-client';
 import './App.css';
 
 import NavBar from './components/Navbar';
+import PostList from './components/PostList';
 import HomePage from './components/HomePage';
 import AboutPage from './components/AboutPage';
 import LoginPage from './components/LoginPage';
@@ -57,7 +58,10 @@ class App extends React.Component {
     }
     const MyHomePage = (props) => {
       return (
-        <HomePage login={this.state.login} username={this.state.username} socket={this.socket}/>
+        <div>
+          <PostList socket={this.socket}/>
+          <HomePage login={this.state.login} username={this.state.username} socket={this.socket}/>
+        </div>
       );
     }
 
@@ -67,9 +71,13 @@ class App extends React.Component {
       );
     }
 
-    const MyContent = (props) => {
+    const MyContentPage = (props) => {
+      console.log(props.match.params._id);
       return (
-        <ContentPage title={this.props.params.title}/>
+        <div>
+          <PostList socket={this.socket}/>
+          <ContentPage socket={this.socket} _id={props.match.params._id}/>
+        </div>
       );
     }
 
@@ -82,7 +90,7 @@ class App extends React.Component {
           <Route path='/login' render={MyLoginPage}/>
           <Route path='/register' render={MyRegisterPage}/>
           <Route exact path='/newpost' render={MyPostPage}/>
-          <Route path='/post/:title' component={ContentPage}/>
+          <Route path='/post/:_id' render={MyContentPage}/>
         </div>
       </BrowserRouter>
     )

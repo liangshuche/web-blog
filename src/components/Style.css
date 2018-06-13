@@ -1,12 +1,11 @@
 .card {
-    min-height: 300px;
     min-width: 300px;
-    margin-right: 20px;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    max-width: 300px;
+    margin-right: 5px;
+    margin-left: 5px;
 }
-
 .container-scroll {
+    margin-top: 10px;
     overflow-x: auto;
 }
 
@@ -14,4 +13,10 @@
     border: 10px;
     border-color: black;
     background: gray;
+}
+
+.fixed-img {
+    height: 100px;
+    weight: auto;
+
 }
