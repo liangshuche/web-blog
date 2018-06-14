@@ -17,7 +17,7 @@
     "socket.io-client": "^2.1.1"
   },
   "scripts": {
-    "start": "node src/backend/server.js & react-scripts start",
+    "start": "node src/backend/server_heroku.js & react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
