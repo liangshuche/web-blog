@@ -25,9 +25,7 @@ class PostList extends Component {
     }
     render() {
         let card_list = [];
-        if (this.state.posts.length === 0){
-            card_list.push(<a id="no">No Post Yet</a>);
-        } else {
+
             for (let i=0; i<this.state.posts.length; ++i){
                 let url = '/post/'+this.state.posts[i]._id;
                 card_list.push(
@@ -44,7 +42,7 @@ class PostList extends Component {
                     </div>
                 )
             }
-        }
+        
         card_list.reverse();
         
         return (
