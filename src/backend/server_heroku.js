@@ -19,7 +19,8 @@ const server = app.listen(process.env.PORT || 5000, () => {
   	console.log('server is running on port 5000');
 });
 
-app.use(express.static('../../build'));
+app.use(express.static( __dirname + '/build'));
+
 
 const io = socket(server);
 
