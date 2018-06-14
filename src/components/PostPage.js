@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-var fs = require('fs');
 
+let errBar = <div><br/></div>;
 var options = {
     month: "short",
     day: "numeric",
@@ -16,10 +16,17 @@ class PostPage extends Component {
             title: '',
             content: '',
             file: null,
+            wait: false,
             redirect: false,
+            error: false,
         }
 
         this.socket = this.props.socket;
+        this.socket.on('RECEIVE_NEW_POST', () => {
+            this.setState({
+                redirect: true,
+            })
+        });
 
         this.handleTitleChange = this.handleTitleChange.bind(this);
         this.handleContentChange = this.handleContentChange.bind(this);
@@ -42,35 +49,56 @@ class PostPage extends Component {
 
 
     handleOnClick() {
-
-        let time = new Date();
-        this.socket.emit('NEW_POST', {
-            user: this.props.username,
-            title: this.state.title,
-            content: this.state.content,
-            img: this.state.file,
-            time: time.toLocaleString('en', options),
-        });
+        if( this.state.title !== '' && this.state.content !== ''){
+            let time = new Date();
+            this.socket.emit('NEW_POST', {
+                user: this.props.username,
+                title: this.state.title,
+                content: this.state.content,
+                img: this.state.file,
+                time: time.toLocaleString('en', options),
+            });
+            
+            this.setState({
+                title: '',
+                content: '',
+                file: null,
+                wait: true,
+                error: false,
+            });
+        } else {
+            this.setState({
+                error: true,
+            })
+        }
         
-        
-        
-        this.setState({
-            title: '',
-            content: '',
-            file: null,
-            redirect: true,
-        });
         
     }
     render() {
         let file_text =  'Choose file'
-        if (this.state.file !== null){
+        let postBtn = <button onClick={this.handleOnClick} className="btn btn-outline-secondary btn-lg btn-block">Post</button>;
+        if (this.state.file){
             file_text = this.state.file.name;
         }
         if (this.state.redirect) {
             return (
                 <Redirect push to='/'/>
             );
+        }
+        if (this.state.wait) {
+            postBtn = <button className="btn btn-outline-secondary btn-lg btn-block" disabled>Saving Post...</button>;
+        }
+        if (this.state.error){
+            errBar = (
+                <div class="alert alert-danger" role="alert">
+                    Please fill in title and content!
+                </div>
+            );
+        }
+        else {
+            errBar = (
+                <div><br/></div>
+            )
         }
         if( this.props.login) {
             return (
@@ -103,8 +131,8 @@ class PostPage extends Component {
                                     <label class="custom-file-label">{file_text}</label>
                                 </div>
                             </div>
-                            <br/>
-                            <button onClick={this.handleOnClick} className="btn btn-outline-secondary btn-lg btn-block">Post</button>        
+                            {errBar}
+                            {postBtn}        
                         </div>
                         <div className='col-4'></div>                        
                     </div>

@@ -35,7 +35,7 @@ class RegisterPage extends Component {
 
     }
     handleUsernameChange(ev) {
-        if( ev.target.value.length > 3 && ev.target.value.length < 21 ){
+        if( ev.target.value.length > 1 && ev.target.value.length < 21 ){
             this.setState({ usernameClass: 'is-valid'});
         }
         else {
@@ -115,7 +115,7 @@ class RegisterPage extends Component {
                         <div class="form-group">
                             <label for="Account">Username</label>
                             <input type="text" className={"form-control " + this.state.usernameClass} id="account" value={this.state.username} onChange={this.handleUsernameChange}/>
-                            <div class="invalid-feedback">Username must contain 4~20 characters</div>
+                            <div class="invalid-feedback">Username must contain 2~20 characters</div>
                         </div>
                         <div class="form-group">
                             <label for="Password">Password</label>

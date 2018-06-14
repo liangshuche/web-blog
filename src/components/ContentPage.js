@@ -24,27 +24,16 @@ class ContentPage extends Component {
                 time: data.time,
             });
         });
-        
-        this.updatePage = this.updatePage.bind(this);
-
     }
 
     componentWillReceiveProps = (nextProps)=> {
         if (nextProps._id !== this.state._id) {
+            this.socket.emit('GET_POST_BY_ID', (nextProps._id));
             this.setState({_id: nextProps._id});
         }
         
     };
 
-
-
-    componentDidUpdate = () => {
-        this.socket.emit('GET_POST_BY_ID', (this.state._id)); 
-    }
-
-    updatePage() {
-        
-    }
     render() {
         return (
             <div>
@@ -58,7 +47,7 @@ class ContentPage extends Component {
                     <br/>
                     <h1 className='text-truncate'>{this.state.title}</h1>
                     <h4 className='text-truncate'>{this.state.user}</h4>
-                    <h5 className='text-truncate'>{this.state.time}</h5>
+                    <h5 className='text-truncate' style={{color: 'gray'}}>{this.state.time}</h5>
                     <br/>
                     <br/>
                     {this.state.content.split('\n').map((item, key) => {

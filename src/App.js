@@ -72,7 +72,6 @@ class App extends React.Component {
     }
 
     const MyContentPage = (props) => {
-      console.log(props.match.params._id);
       return (
         <div>
           <PostList socket={this.socket}/>

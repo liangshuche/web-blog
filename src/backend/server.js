@@ -3,7 +3,7 @@ const socket = require('socket.io');
 const mongoose = require('mongoose');
 const app = express();
 
-//mongoose.connect('mongodb://localhost:27017/blog');
+mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://admin:a12345@ds159100.mlab.com:59100/web-blog');
 
 const postsSchema = mongoose.Schema({
@@ -22,7 +22,8 @@ const server = app.listen(5000, () => {
 const io = socket(server);
 
 const userList = [
-  	{ username: 'admin', password: '123' , age: '20'},
+	  { username: 'admin', password: '123' , age: '20'},
+	  { username: 'tony' , password: '123', age: '21'}
 ];
 
 
@@ -67,17 +68,18 @@ io.on('connection', (socket) => {
 			time: data.time,  
 		});
 
-	newPosts.save();
+		newPosts.save().then(() => {
+			io.emit('RECEIVE_NEW_POST');
+		}).catch((err) => {console.log(err)});
   	});
 
   	socket.on('GET_POST', () => {
-		var query = Posts.find();
+		var query = Posts.find().sort({ time: -1});
 		var post_list = [];
-	
-		query.exec(function(err,posts){
 
-	  		if(err) return console.log(err);
-		  
+		var promise = query.exec();
+
+		promise.then(function (posts){
 			posts.forEach(function(post){
 				post_list.push({
 					_id: post._id,
@@ -87,32 +89,27 @@ io.on('connection', (socket) => {
 					time: post.time,
 				})
 			});
-
-	  	io.emit('RECEIVE_POST', (post_list));
-		});
+			io.emit('RECEIVE_POST', (post_list));		
+		}).catch((err) => {console.log(err)});
 	});
 
 	socket.on('GET_POST_BY_ID', (id) => {
-		var query = Posts.find({_id: id});
+		
+		var query = Posts.findOne({_id: id});
 		var thePost = null;
-	
-		query.exec(function(err,posts){
 
-			if(err) return console.log(err);
-		  
-			posts.forEach(function(post){
-				thePost = {
-					_id: post._id,
-		   			user: post.user,
-		   			title: post.title,
-					content: post.content,
-					time: post.time,
-				};
-			});
-			io.emit('RECEIVE_POST_BY_ID', (thePost));
-		});
+		var promise = query.exec();
+
+		promise.then(function (post){
+			thePost = {
+				_id: post._id,
+		   		user: post.user,
+		   		title: post.title,
+				content: post.content,
+				time: post.time,
+			};
+			io.emit('RECEIVE_POST_BY_ID', (thePost))
+		}).catch((err) => {console.log(err)});
 	});
-	  
-	  
 });
 

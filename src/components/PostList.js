@@ -42,9 +42,6 @@ class PostList extends Component {
                     </div>
                 )
             }
-        
-        card_list.reverse();
-        
         return (
             <div className="container-scroll">
                 <div className="d-flex flex-row flex-now">
